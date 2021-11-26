@@ -134,7 +134,7 @@ public class ForeProductDetailsController {
     @Deprecated
     @ResponseBody
     @GetMapping("review/{pid}")
-    public String loadProductReviewList(@PathVariable("pid") String pid/*产品ID*/,
+    public JSONObject loadProductReviewList(@PathVariable("pid") String pid/*产品ID*/,
                                         @RequestParam Integer index/* 页数 */,
                                         @RequestParam Integer count/* 行数 */) {
         Integer product_id = Integer.parseInt(pid);
@@ -142,14 +142,14 @@ public class ForeProductDetailsController {
         List<Review> reviewList = reviewService.getListByProductId(product_id, new PageUtil(index, count));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("reviewList", JSONArray.parseArray(JSON.toJSONString(reviewList)));
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     //按产品ID加载产品属性列表-ajax
     @Deprecated
     @ResponseBody
     @GetMapping("property/{pid}")
-    public String loadProductPropertyList(@PathVariable("pid") String pid/*产品ID*/) {
+    public JSONObject loadProductPropertyList(@PathVariable("pid") String pid/*产品ID*/) {
         Integer product_id = Integer.parseInt(pid);
 
         // 获取产品详情-属性值信息
@@ -174,13 +174,13 @@ public class ForeProductDetailsController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("propertyList", JSONArray.parseArray(JSON.toJSONString(propertyList)));
 
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     //加载猜你喜欢列表-ajax
     @ResponseBody
     @GetMapping("guess/{cid}")
-    public String guessYouLike(@PathVariable("cid") Integer cid,
+    public JSONObject guessYouLike(@PathVariable("cid") Integer cid,
                                @RequestParam Integer guessNumber) {
         // 获取猜你喜欢列表
         Integer total = productService.getTotal(new Product().setProduct_category(new Category().setCategory_id(cid)), new Byte[]{0, 2});
@@ -217,6 +217,6 @@ public class ForeProductDetailsController {
         jsonObject.put("success", true);
         jsonObject.put("loveProductList", JSONArray.parseArray(JSON.toJSONString(loveProductList)));
         jsonObject.put("guessNumber", i);
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 }

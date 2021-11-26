@@ -13,6 +13,7 @@
              * *****/
             //点击查询按钮时
             $("#btn_category_submit").click(function () {
+                console.log(111)
                 var category_name = $.trim($("#input_category_name").val());
                 //封装数据
                 dataList.category_name = encodeURI(category_name);
@@ -126,6 +127,7 @@
                         traditional: true,
                         success: function (data) {
                             if (data.success) {
+
                                 $(".msg").stop(true, true).animate({
                                     opacity: 1
                                 }, 550, function () {
@@ -133,6 +135,10 @@
                                         opacity: 0
                                     }, 1500);
                                 });
+
+                                setTimeout(function () {
+                                    ajaxUtil.getPage("category", null, false);
+                                },1000);
                             }
                         }
                     })

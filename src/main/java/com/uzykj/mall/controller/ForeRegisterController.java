@@ -46,7 +46,7 @@ public class ForeRegisterController {
     //前台-用户注册-ajax
     @ResponseBody
     @PostMapping("/doRegister")
-    public String register(
+    public JSONObject register(
             @RequestParam(value = "user_name") String user_name  /*用户名 */,
             @RequestParam(value = "user_nickname") String user_nickname  /*用户昵称 */,
             @RequestParam(value = "user_password") String user_password  /*用户密码*/,
@@ -60,7 +60,7 @@ public class ForeRegisterController {
             JSONObject object = new JSONObject();
             object.put("success", false);
             object.put("msg", "用户名已存在，请重新输入！");
-            return object.toJSONString();
+            return object;
         }
 
         String encode = Md5Util.MD5Encode(user_password, "UTF-8");
@@ -76,7 +76,7 @@ public class ForeRegisterController {
         if (userService.add(user)) {
             JSONObject object = new JSONObject();
             object.put("success", true);
-            return object.toJSONString();
+            return object;
         } else {
             throw new RuntimeException();
         }

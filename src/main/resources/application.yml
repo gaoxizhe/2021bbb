@@ -61,14 +61,14 @@ logging:
 
 storeService:
   # 是否启用
-  use: local
+  use: qiniu
   qiniu:
-    qiniu_ak:
-    qiniu_sk:
+    qiniu_ak: b7Yiyyl7N2rGDwTRdTbrgXzZzwOTP-64Ucbz4Uxn
+    qiniu_sk: 72_dRRNGkMmKhVVM5ag73ZF-FHr7TBLeEo8jkoAU
     #资源储存中心
-    mall_zone:
+    mall_zone: g-cloud
     #七牛存储空间域名
-    mall_domain:
+    mall_domain: http://file.sosozj.cn/
   local:
     # 本地存放地址
     local_file_path: /work/resource/mall/

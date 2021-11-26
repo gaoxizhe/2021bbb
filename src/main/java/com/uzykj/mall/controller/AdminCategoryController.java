@@ -88,7 +88,7 @@ public class AdminCategoryController {
     //添加分类信息-ajax
     @ResponseBody
     @PostMapping("/category")
-    public String addCategory(@RequestParam String category_name/* 分类名称 */,
+    public JSONObject addCategory(@RequestParam String category_name/* 分类名称 */,
                               @RequestParam String category_image_src/* 分类图片路径 */) {
         JSONObject jsonObject = new JSONObject();
         Category category = new Category()
@@ -103,13 +103,13 @@ public class AdminCategoryController {
             jsonObject.put("success", false);
             throw new RuntimeException();
         }
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     //更新分类信息-ajax
     @ResponseBody
     @PutMapping("/category/{category_id}")
-    public String updateCategory(@RequestParam String category_name/* 分类名称 */,
+    public JSONObject updateCategory(@RequestParam String category_name/* 分类名称 */,
                                  @RequestParam String category_image_src/* 分类图片路径 */,
                                  @PathVariable("category_id") Integer category_id/* 分类ID */) {
         JSONObject jsonObject = new JSONObject();
@@ -126,13 +126,13 @@ public class AdminCategoryController {
             throw new RuntimeException();
         }
 
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     //删除分类
     @ResponseBody
     @GetMapping("/category/delete/{arr}")
-    public String deleteCategory(@PathVariable("arr") Integer[] category_id_list/* 商品id集合 */) {
+    public JSONObject deleteCategory(@PathVariable("arr") Integer[] category_id_list/* 商品id集合 */) {
         JSONObject object = new JSONObject();
         for (int i = 0; i < category_id_list.length; i++) {
             Product product = new Product()
@@ -206,13 +206,13 @@ public class AdminCategoryController {
         } else {
             object.put("success", false);
         }
-        return object.toJSONString();
+        return object;
     }
 
     //按条件查询分类-ajax
     @ResponseBody
     @GetMapping("/category/{index}/{count}")
-    public String getCategoryBySearch(@RequestParam(required = false) String category_name/* 分类名称 */,
+    public JSONObject getCategoryBySearch(@RequestParam(required = false) String category_name/* 分类名称 */,
                                       @PathVariable Integer index/* 页数 */,
                                       @PathVariable Integer count/* 行数 */) throws UnsupportedEncodingException {
         //移除不必要条件
@@ -235,14 +235,14 @@ public class AdminCategoryController {
         object.put("totalPage", pageUtil.getTotalPage());
         object.put("pageUtil", pageUtil);
 
-        return object.toJSONString();
+        return object;
     }
 
 
     // 上传分类图片-ajax
     @ResponseBody
     @PostMapping("/uploadCategoryImage")
-    public String uploadCategoryImage(@RequestParam MultipartFile file, HttpSession session) {
+    public JSONObject uploadCategoryImage(@RequestParam MultipartFile file, HttpSession session) {
         JSONObject object = new JSONObject();
         object.put("success", false);
 
@@ -250,7 +250,7 @@ public class AdminCategoryController {
             try {
                 String originalFileName = file.getOriginalFilename();
                 if (storeUse.equals(ProductImageStoreEnum.qiniu.toString())) {
-                    UpResult upload = QiniuUtil.upload(file.getInputStream(), originalFileName, QiniuUtil.MALL_ZONE);
+                    UpResult upload = QiniuUtil.upload(file.getInputStream(), originalFileName, QiniuUtil.getInstance().MALL_ZONE);
                     if (upload != null) {
                         log.info("七牛云上传路径：" + upload.zoneName + upload.fileName);
                         object.put("success", true);
@@ -273,6 +273,6 @@ public class AdminCategoryController {
                 log.warn("文件上传失败！", e);
             }
         }
-        return object.toJSONString();
+        return object;
     }
 }

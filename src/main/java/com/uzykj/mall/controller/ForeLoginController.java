@@ -30,7 +30,7 @@ public class ForeLoginController {
     // 登陆验证-ajax
     @ResponseBody
     @PostMapping("/doLogin")
-    public String checkLogin(HttpSession session, @RequestParam String username, @RequestParam String password) {
+    public JSONObject checkLogin(HttpSession session, @RequestParam String username, @RequestParam String password) {
         User user = userService.login(username, password);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);
@@ -40,7 +40,7 @@ public class ForeLoginController {
             session.setAttribute("USER_ID", user.getUser_id());
             jsonObject.put("success", true);
         }
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     // 退出当前账号

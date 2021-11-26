@@ -1,5 +1,7 @@
 package com.uzykj.mall.entity;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ProductImage {
     private Integer productImage_id;
     private Byte productImage_type;
@@ -56,7 +58,7 @@ public class ProductImage {
     }
 
     public String getProductimage_store() {
-        return productimage_store;
+        return StringUtils.isBlank(productimage_store) ? "" : productimage_store;
     }
 
     public ProductImage setProductimage_store(String productimage_store) {

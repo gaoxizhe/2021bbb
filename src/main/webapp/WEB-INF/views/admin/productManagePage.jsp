@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
+    <script></script>
     <script>
         //检索数据集
         var dataList = {
@@ -105,6 +106,7 @@
                     object.attr("disabled",false);
                     //显示产品统计数据
                     $("#product_count_data").text(data.productCount);
+                    // data = JSON.parse(data)
                     if (data.productList.length > 0) {
                         for (var i = 0; i < data.productList.length; i++) {
                             var isEnabledClass;

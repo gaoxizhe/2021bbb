@@ -23,18 +23,18 @@ public class ForeAddressController {
     //根据address_areaId获取地址信息-ajax
     @ResponseBody
     @GetMapping("/{areaId}")
-    protected String getAddressByAreaId(@PathVariable String areaId) {
+    protected JSONObject getAddressByAreaId(@PathVariable String areaId) {
         JSONObject object = new JSONObject();
         List<Address> addressList = addressService.getList(null, areaId);
         if (addressList == null || addressList.size() <= 0) {
             object.put("success", false);
-            return object.toJSONString();
+            return object;
         }
         List<Address> childAddressList = addressService.getList(null, addressList.get(0).getAddress_areaId());
 
         object.put("success", true);
         object.put("addressList", addressList);
         object.put("childAddressList", childAddressList);
-        return object.toJSONString();
+        return object;
     }
 }

@@ -71,7 +71,7 @@ public class ForeUserController {
     //前台-用户更换头像
     @ResponseBody
     @PostMapping("user/uploadUserHeadImage")
-    public String uploadUserHeadImage(@RequestParam MultipartFile file, HttpSession session) {
+    public JSONObject uploadUserHeadImage(@RequestParam MultipartFile file, HttpSession session) {
         JSONObject object = new JSONObject();
         if (!file.isEmpty()) {
             try {
@@ -100,7 +100,7 @@ public class ForeUserController {
                 log.error("文件上传失败！", e);
             }
         }
-        return object.toJSONString();
+        return object;
     }
 
     //前台-用户详情更新

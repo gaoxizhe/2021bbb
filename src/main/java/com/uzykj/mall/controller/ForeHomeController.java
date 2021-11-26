@@ -73,11 +73,11 @@ public class ForeHomeController {
     //获取主页分类下产品信息-ajax
     @ResponseBody
     @GetMapping("product/nav/{category_id}")
-    public String getProductByNav(@PathVariable("category_id") Integer category_id) {
+    public JSONObject getProductByNav(@PathVariable("category_id") Integer category_id) {
         JSONObject object = new JSONObject();
         if (category_id == null) {
             object.put("success", false);
-            return object.toJSONString();
+            return object;
         }
         log.info("获取分类ID为{}的产品标题数据", category_id);
         List<Product> productList = productService.getTitle(new Product().setProduct_category(new Category().setCategory_id(category_id)), new PageUtil(0, 40));
@@ -95,6 +95,6 @@ public class ForeHomeController {
         Category category = new Category().setCategory_id(category_id).setComplexProductList(complexProductList);
         object.put("success", true);
         object.put("category", category);
-        return object.toJSONString();
+        return object;
     }
 }

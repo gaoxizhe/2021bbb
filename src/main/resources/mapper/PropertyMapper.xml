@@ -6,15 +6,15 @@
     <resultMap id="propertyMap" type="property">
         <id property="property_id" column="property_id"/>
         <result property="property_name" column="property_name"/>
+        <result property="property_category_id" column="property_category_id"/>
         <association property="property_category" javaType="com.uzykj.mall.entity.Category">
             <id property="category_id" column="property_category_id"/>
         </association>
     </resultMap>
 
-    <insert id="insertOne" parameterType="property">
-        INSERT property (property_id,property_name,property_category_id)
+    <insert id="insertOne" parameterType="property" useGeneratedKeys="true" keyProperty="property_id">
+        INSERT property (property_name,property_category_id)
         VALUES(
-        null,
         #{property.property_name},
         #{property.property_category_id})
     </insert>
@@ -43,6 +43,17 @@
             <if test="property_id_list != null">
                 property_id IN
                 <foreach collection="property_id_list" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+    <delete id="delete">
+        DELETE FROM property
+        <where>
+            <if test="property_id_list != null">
+                property_id IN
+                <foreach collection="property_id_list" item="item" index="index" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
@@ -89,4 +100,13 @@
             </where>
         </if>
     </select>
+    <select id="selectNameAndId" resultMap="propertyMap">
+
+        select property_id,property_name,property_category_id from
+        property where
+        property_name = #{name}
+        and
+        property_category_id = #{category_id}
+    </select>
+
 </mapper>

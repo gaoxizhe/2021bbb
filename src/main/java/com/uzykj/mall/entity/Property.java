@@ -1,9 +1,13 @@
 package com.uzykj.mall.entity;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class Property {
     private Integer property_id;
+    private Integer property_category_id;
     private String property_name;
     private Category property_category;
     private List<PropertyValue> propertyValueList;
@@ -35,6 +39,14 @@ public class Property {
     public Property setProperty_id(Integer property_id) {
         this.property_id = property_id;
         return this;
+    }
+
+    public Integer getProperty_category_id() {
+        return property_category_id;
+    }
+
+    public void setProperty_category_id(Integer property_category_id) {
+        this.property_category_id = property_category_id;
     }
 
     public String getProperty_name() {

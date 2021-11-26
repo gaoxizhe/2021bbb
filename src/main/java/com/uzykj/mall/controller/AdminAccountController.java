@@ -36,7 +36,7 @@ public class AdminAccountController {
     //管理员头像上传
     @ResponseBody
     @PostMapping("/uploadAdminHeadImage")
-    public String uploadAdminHeadImage(@RequestParam MultipartFile file, HttpSession session) {
+    public JSONObject uploadAdminHeadImage(@RequestParam MultipartFile file, HttpSession session) {
         String originalFileName = file.getOriginalFilename();
         String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
         String fileName = UUID.randomUUID() + extension;
@@ -55,13 +55,13 @@ public class AdminAccountController {
             log.error("文件上传失败！", e);
             jsonObject.put("success", false);
         }
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     //更新管理员信息
     @ResponseBody
     @PutMapping("/account/{admin_id}")
-    public String updateAdmin(HttpSession session,
+    public JSONObject updateAdmin(HttpSession session,
                               @RequestParam(required = false) String admin_nickname/*管理员昵称*/,
                               @RequestParam(required = false) String admin_password/*管理员当前密码*/,
                               @RequestParam(required = false) String admin_newPassword/*管理员新密码*/,
@@ -79,7 +79,7 @@ public class AdminAccountController {
             } else {
                 jsonObject.put("success", false);
                 jsonObject.put("message", "原密码输入有误！");
-                return jsonObject.toJSONString();
+                return jsonObject;
             }
         }
         if (admin_profile_picture_src != null && !admin_profile_picture_src.equals("")) {
@@ -96,6 +96,6 @@ public class AdminAccountController {
             throw new RuntimeException();
         }
 
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 }

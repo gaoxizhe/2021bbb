@@ -121,7 +121,7 @@ public class AdminProductController {
     //添加产品信息-ajax.
     @ResponseBody
     @PostMapping("/product")
-    public String addProduct(@RequestParam String product_name/* 产品名称 */,
+    public JSONObject addProduct(@RequestParam String product_name/* 产品名称 */,
                              @RequestParam String product_title/* 产品标题 */,
                              @RequestParam Integer product_category_id/* 产品类型ID */,
                              @RequestParam Double product_sale_price/* 产品最低价 */,
@@ -216,13 +216,13 @@ public class AdminProductController {
         jsonObject.put("success", true);
         jsonObject.put("product_id", product_id);
 
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     //更新产品信息-ajax
     @ResponseBody
     @PutMapping("/product/{product_id}")
-    public String updateProduct(@RequestParam String product_name/* 产品名称 */,
+    public JSONObject updateProduct(@RequestParam(name = "product_name" ,required = false) String product_name/* 产品名称 */,
                                 @RequestParam String product_title/* 产品标题 */,
                                 @RequestParam Integer product_category_id/* 产品类型ID */,
                                 @RequestParam Double product_sale_price/* 产品最低价 */,
@@ -233,7 +233,15 @@ public class AdminProductController {
                                 @RequestParam(required = false) Integer[] propertyDeleteList/* 产品删除属性ID数组 */,
                                 @RequestParam(required = false) String[] productSingleImageList/*产品预览图片名称数组*/,
                                 @RequestParam(required = false) String[] productDetailsImageList/*产品详情图片名称数组*/,
-                                @PathVariable("product_id") Integer product_id/* 产品ID */) {
+                                @PathVariable("product_id") Integer product_id/* 产品ID */)
+//    public JSONObject updateProduct(@RequestBody Product productP, @PathVariable("product_id") Integer product_id)
+    {
+//        String propertyAddJson = productP.getPropertyAddJson();
+//        String propertyUpdateJson = productP.getPropertyUpdateJson();
+//        Integer[] propertyDeleteList = productP.getPropertyDeleteList();
+//        String[] productSingleImageList = productP.getProductSingleImageList();
+//        String[] productDetailsImageList = productP.getProductDetailsImageList();
+
         JSONObject jsonObject = new JSONObject();
         Product product = new Product()
                 .setProduct_id(product_id)
@@ -357,13 +365,13 @@ public class AdminProductController {
         jsonObject.put("success", true);
         jsonObject.put("product_id", product_id);
 
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     //删除商品
     @ResponseBody
     @PostMapping("/product/delete/{arr}")
-    public String deleteProduct(HttpSession session,
+    public JSONObject deleteProduct(HttpSession session,
                                 @PathVariable("arr") Integer[] product_id_list/* 商品id集合 */) {
         JSONObject object = new JSONObject();
         log.info("删除:用户id数组：" + product_id_list.toString());
@@ -433,13 +441,13 @@ public class AdminProductController {
         } else {
             object.put("success", false);
         }
-        return object.toJSONString();
+        return object;
     }
 
     //按条件查询产品-ajax
     @ResponseBody
     @GetMapping("/product/{index}/{count}")
-    public String getProductBySearch(@RequestParam(required = false) String product_name/* 产品名称 */,
+    public JSONObject getProductBySearch(@RequestParam(required = false) String product_name/* 产品名称 */,
                                      @RequestParam(required = false) Integer category_id/* 产品类型ID */,
                                      @RequestParam(required = false) Double product_sale_price/* 产品最低价 */,
                                      @RequestParam(required = false) Double product_price/* 产品最高价 */,
@@ -486,13 +494,13 @@ public class AdminProductController {
         object.put("totalPage", pageUtil.getTotalPage());
         object.put("pageUtil", pageUtil);
 
-        return object.toJSONString();
+        return object;
     }
 
     //按类型ID查询属性-ajax
     @ResponseBody
     @GetMapping("/property/type/{property_category_id}")
-    public String getPropertyByCategoryId(@PathVariable Integer property_category_id/* 属性所属类型ID*/) {
+    public JSONObject getPropertyByCategoryId(@PathVariable Integer property_category_id/* 属性所属类型ID*/) {
         //封装查询条件
         Category category = new Category()
                 .setCategory_id(property_category_id);
@@ -501,13 +509,13 @@ public class AdminProductController {
         List<Property> propertyList = propertyService.getList(new Property().setProperty_category(category), null);
         object.put("propertyList", JSONArray.parseArray(JSON.toJSONString(propertyList)));
 
-        return object.toJSONString();
+        return object;
     }
 
     //按ID删除产品图片并返回最新结果-ajax
     @ResponseBody
     @DeleteMapping("/productImage/{productImage_id}")
-    public String deleteProductImageById(HttpSession session,
+    public JSONObject deleteProductImageById(HttpSession session,
                                          @PathVariable Integer productImage_id/* 产品图片ID */) {
         JSONObject object = new JSONObject();
         log.info("获取productImage_id为{}的产品图片信息", productImage_id);
@@ -538,13 +546,13 @@ public class AdminProductController {
             object.put("success", false);
             throw new RuntimeException();
         }
-        return object.toJSONString();
+        return object;
     }
 
     //上传产品图片-ajax
     @ResponseBody
     @PostMapping("/uploadProductImage")
-    public String uploadProductImage(@RequestParam MultipartFile file,
+    public JSONObject uploadProductImage(@RequestParam MultipartFile file,
                                      @RequestParam String imageType, HttpSession session) {
         JSONObject object = new JSONObject();
         object.put("success", false);
@@ -556,7 +564,7 @@ public class AdminProductController {
             String fileName = UUID.randomUUID() + extension;
             try {
                 if (storeUse.equals(ProductImageStoreEnum.qiniu.toString())) {
-                    UpResult upload = QiniuUtil.upload(file.getInputStream(), originalFileName, QiniuUtil.MALL_ZONE);
+                    UpResult upload = QiniuUtil.upload(file.getInputStream(), originalFileName, QiniuUtil.getInstance().MALL_ZONE);
                     if (upload != null) {
                         log.info("七牛云路径：" + upload.zoneName + upload.fileName);
                         String fileUrl = QiniuUtil.getFileUrl(upload.fileName, QiniuUtil.MALL_DOMAIN);
@@ -580,6 +588,6 @@ public class AdminProductController {
                 log.warn("文件上传失败！", e);
             }
         }
-        return object.toJSONString();
+        return object;
     }
 }

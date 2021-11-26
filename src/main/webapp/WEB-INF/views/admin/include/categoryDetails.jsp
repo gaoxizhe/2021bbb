@@ -143,7 +143,8 @@
                 success: function (data) {
                     $(fileDom).attr("disabled", false).prev("span").text("上传图片");
                     if (data.success) {
-                        $(fileDom).parent('.details_picList_fileUpload').before("<li><img src='${pageContext.request.contextPath}/static/images/store/" + data.fileName + "' id='pic_category'  width='1190px' height='150px'/></li>").css("display", "none");
+                        let fileUrl = data.fileUrl;
+                        $(fileDom).parent('.details_picList_fileUpload').before("<li><img src='"+fileUrl+"' id='pic_category'  width='1190px' height='150px'/></li>").css("display", "none");
                     } else {
                         alert("图片上传异常！");
                     }
@@ -171,7 +172,7 @@
                             $('#modalDiv').modal("hide");
                             setTimeout(function () {
                                 //ajax请求页面
-                                ajaxUtil.getPage("category/" + data.category_id, null, true);
+                                ajaxUtil.getPage("category", null, false);
                             }, 170);
                         });
                         $(".modal-body").text("保存成功！");

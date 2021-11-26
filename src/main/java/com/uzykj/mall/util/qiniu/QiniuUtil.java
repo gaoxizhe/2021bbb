@@ -10,6 +10,7 @@ import com.qiniu.storage.model.BatchStatus;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import com.uzykj.mall.entity.UpResult;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
@@ -18,6 +19,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.util.Properties;
 
+@Slf4j
 public class QiniuUtil {
 
     //七牛云密钥
@@ -213,9 +215,13 @@ public class QiniuUtil {
      * @DateTime 2018年9月26日 下午5:42:27
      */
     public static void delete(String filePath, String zoneName) throws QiniuException {
-        Configuration conf = new Configuration(zone);
-        BucketManager bucketManager = new BucketManager(auth, conf);
-        bucketManager.delete(zoneName, filePath);
+        try {
+            Configuration conf = new Configuration(zone);
+            BucketManager bucketManager = new BucketManager(auth, conf);
+            bucketManager.delete(zoneName, filePath);
+        } catch (Exception e) {
+            log.error("删除文件异常 ： {}", e.getMessage());
+        }
     }
 
 

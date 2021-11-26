@@ -124,7 +124,7 @@ public class AdminUserController {
     //按条件查询用户-ajax
     @ResponseBody
     @GetMapping("/user/{index}/{count}")
-    public String getUserBySearch(@RequestParam(required = false) String user_name/* 用户名称 */,
+    public JSONObject getUserBySearch(@RequestParam(required = false) String user_name/* 用户名称 */,
                                   @RequestParam(required = false) Byte[] user_gender_array/* 用户性别数组 */,
                                   @RequestParam(required = false) String orderBy/* 排序字段 */,
                                   @RequestParam(required = false, defaultValue = "true") Boolean isDesc/* 是否倒序 */,
@@ -166,13 +166,13 @@ public class AdminUserController {
         object.put("totalPage", pageUtil.getTotalPage());
         object.put("pageUtil", pageUtil);
 
-        return object.toJSONString();
+        return object;
     }
 
     //删除用户
     @ResponseBody
     @GetMapping("/user/delete/{arr}")
-    public String deleteUser(@PathVariable("arr") Integer[] user_id_list/* 用户id集合 */
+    public JSONObject deleteUser(@PathVariable("arr") Integer[] user_id_list/* 用户id集合 */
     ) {
         log.info("删除:用户id数组：" + user_id_list.toString());
         for (int i = 0; i < user_id_list.length; i++) {
@@ -221,6 +221,6 @@ public class AdminUserController {
         } else {
             object.put("success", false);
         }
-        return object.toJSONString();
+        return object;
     }
 }

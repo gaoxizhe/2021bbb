@@ -121,6 +121,7 @@
                  ******/
                 //单击保存按钮时
                 $("#btn_product_save").click(function () {
+                    console.log("點擊保存")
                     var product_id = $("#details_product_id").val();
                     var product_category_id = $("#select_product_category").selectpicker("val");
                     var product_isEnabled = $("input[name='radio_product_isEnabled']:checked").val();
@@ -267,6 +268,7 @@
             });
             //单击取消按钮时
             $("#btn_product_cancel").click(function () {
+                console.log("单击取消按钮时")
                 $(".menu_li[data-toggle=product]").click();
             });
             //更改产品类型列表时

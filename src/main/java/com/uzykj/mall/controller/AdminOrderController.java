@@ -97,7 +97,7 @@ public class AdminOrderController {
     //更新订单信息-ajax
     @ResponseBody
     @PutMapping("/{order_id}")
-    public String updateOrder(@PathVariable("order_id") String order_id) {
+    public JSONObject updateOrder(@PathVariable("order_id") String order_id) {
         JSONObject jsonObject = new JSONObject();
         ProductOrder productOrder = new ProductOrder()
                 .setProductOrder_id(Integer.valueOf(order_id))
@@ -115,13 +115,13 @@ public class AdminOrderController {
             throw new RuntimeException();
         }
         jsonObject.put("order_id", order_id);
-        return jsonObject.toJSONString();
+        return jsonObject;
     }
 
     //删除订单
     @ResponseBody
     @GetMapping("/delete/{arr}")
-    public String deleteOrder(@PathVariable("arr") Integer[] order_id_list/* 商品id集合 */
+    public JSONObject deleteOrder(@PathVariable("arr") Integer[] order_id_list/* 商品id集合 */
     ) {
         log.info("删除:用户id数组：" + order_id_list.toString());
         JSONObject object = new JSONObject();
@@ -131,13 +131,13 @@ public class AdminOrderController {
         } else {
             object.put("success", false);
         }
-        return object.toJSONString();
+        return object;
     }
 
     //按条件查询订单-ajax
     @ResponseBody
     @GetMapping("/order/{index}/{count}")
-    public String getOrderBySearch(@RequestParam(required = false) String productOrder_code/* 订单号 */,
+    public JSONObject getOrderBySearch(@RequestParam(required = false) String productOrder_code/* 订单号 */,
                                    @RequestParam(required = false) String productOrder_post/* 订单邮政编码 */,
                                    @RequestParam(required = false) Byte[] productOrder_status_array/* 订单状态数组 */,
                                    @RequestParam(required = false) String orderBy/* 排序字段 */,
@@ -180,6 +180,6 @@ public class AdminOrderController {
         object.put("totalPage", pageUtil.getTotalPage());
         object.put("pageUtil", pageUtil);
 
-        return object.toJSONString();
+        return object;
     }
 }

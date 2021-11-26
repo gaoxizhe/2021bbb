@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -499,7 +500,7 @@ public class ForeOrderController {
     //更新订单信息为已支付，待发货-ajax
     @ResponseBody
     @PutMapping("/pay/{order_code}")
-    public String orderPay(Map<String, Object> map, HttpSession session,
+    public JSONObject orderPay(Map<String, Object> map, HttpSession session,
                            @PathVariable("order_code") String order_code) {
         User user = (User) session.getAttribute("USER_SESSION");
         Integer userId = (Integer) session.getAttribute("USER_ID");
@@ -511,25 +512,25 @@ public class ForeOrderController {
             log.warn("订单不存在，返回订单列表页");
             object.put("success", false);
             object.put("url", "/order/0/10");
-            return object.toJSONString();
+            return object;
         }
         if (order.getProductOrder_user().getUser_id() != Integer.parseInt(userId.toString())) {
             log.warn("用户与订单信息不一致，返回订单列表页");
             object.put("success", false);
             object.put("url", "/order/0/10");
-            return object.toJSONString();
+            return object;
         }
 
         if (order.getProductOrder_status() == 1) {
             log.warn("订单确认成功");
             object.put("success", true);
             object.put("url", "/order/pay/success/" + order_code);
-            return object.toJSONString();
+            return object;
         } else {
             log.warn("订单状态异常");
             object.put("success", false);
             object.put("url", "/order/0/10");
-            return object.toJSONString();
+            return object;
         }
     }
 
@@ -559,7 +560,7 @@ public class ForeOrderController {
     //更新订单信息为交易成功-ajax
     @ResponseBody
     @PutMapping("/success/{order_code}")
-    public String orderSuccess(Map<String, Object> map, HttpSession session,
+    public JSONObject orderSuccess(Map<String, Object> map, HttpSession session,
                                @PathVariable("order_code") String order_code) {
         User user = (User) session.getAttribute("USER_SESSION");
         Integer userId = (Integer) session.getAttribute("USER_ID");
@@ -571,7 +572,7 @@ public class ForeOrderController {
         if (!(Boolean) checkoutOrderNoStatus.get("miss")) {
             object.put("success", checkoutOrderNoStatus.get("miss"));
             object.put("url", checkoutOrderNoStatus.get("url"));
-            return object.toJSONString();
+            return object;
         }
 
         ProductOrder productOrder = new ProductOrder()
@@ -585,13 +586,13 @@ public class ForeOrderController {
         } else {
             object.put("success", false);
         }
-        return object.toJSONString();
+        return object;
     }
 
     //删除订单
     @ResponseBody
     @GetMapping("/delete/{order_code}")
-    public String deleteOrderItem(Map<String, Object> map, HttpSession session,
+    public JSONObject deleteOrderItem(Map<String, Object> map, HttpSession session,
                                   @PathVariable("order_code") String order_code) {
         User user = (User) session.getAttribute("USER_SESSION");
         map.put("user", user);
@@ -605,13 +606,13 @@ public class ForeOrderController {
             log.info("删除订单成功");
             object.put("success", true);
         }
-        return object.toJSONString();
+        return object;
     }
 
     //更新订单信息为交易关闭-ajax
     @ResponseBody
     @PutMapping("/close/{order_code}")
-    public String orderClose(Map<String, Object> map, HttpSession session,
+    public JSONObject orderClose(Map<String, Object> map, HttpSession session,
                              @PathVariable("order_code") String order_code) {
         User user = (User) session.getAttribute("USER_SESSION");
         Integer userId = (Integer) session.getAttribute("USER_ID");
@@ -623,7 +624,7 @@ public class ForeOrderController {
         if (!(Boolean) checkoutOrderNoStatus.get("miss")) {
             object.put("success", checkoutOrderNoStatus.get("miss"));
             object.put("url", checkoutOrderNoStatus.get("url"));
-            return object.toJSONString();
+            return object;
         }
 
         ProductOrder productOrder = new ProductOrder()
@@ -636,14 +637,14 @@ public class ForeOrderController {
         } else {
             object.put("success", false);
         }
-        return object.toJSONString();
+        return object;
     }
 
     //更新购物车订单项数量-ajax
     @ResponseBody
     @PutMapping("/orderItem")
-    public String updateOrderItem(HttpSession session, Map<String, Object> map,
-                                  @RequestBody() String orderItemMap) {
+    public JSONObject updateOrderItem(HttpSession session, Map<String, Object> map,
+                                      @RequestBody() String orderItemMap, ModelAndView modelAndView) {
         User user = (User) session.getAttribute("USER_SESSION");
         Integer userId = (Integer) session.getAttribute("USER_ID");
         map.put("user", user);
@@ -658,17 +659,19 @@ public class ForeOrderController {
                 if (productOrderItem == null || !productOrderItem.getProductOrderItem_user().getUser_id().equals(userId)) {
                     log.warn("订单项为空或用户状态不一致！");
                     object.put("success", false);
-                    return object.toJSONString();
+                    return object;
                 }
                 if (productOrderItem.getProductOrderItem_order() != null) {
                     log.warn("用户订单项不属于购物车，回到购物车页");
-                    return "redirect:/order/cart";
+                    modelAndView.setViewName("redirect:/order/cart");
+                    // TODO 暂定修改
+//                    return "redirect:/order/cart";
                 }
                 Short number = Short.valueOf(orderItemString.getString(key.toString()));
                 if (number <= 0 || number > 500) {
                     log.warn("订单项产品数量不合法！");
                     object.put("success", false);
-                    return object.toJSONString();
+                    return object;
                 }
                 double price = productOrderItem.getProductOrderItem_price() / productOrderItem.getProductOrderItem_number();
                 Boolean yn = productOrderItemService.update(new ProductOrderItem().setProductOrderItem_id(Integer.valueOf(key)).setProductOrderItem_number(number).setProductOrderItem_price(number * price));
@@ -679,18 +682,18 @@ public class ForeOrderController {
             Object[] orderItemIDArray = orderItemIDSet.toArray();
             object.put("success", true);
             object.put("orderItemIDArray", orderItemIDArray);
-            return object.toJSONString();
+            return object;
         } else {
             log.warn("无订单项可以处理");
             object.put("success", false);
-            return object.toJSONString();
+            return object;
         }
     }
 
     //创建新订单-单订单项-ajax
     @ResponseBody
     @PostMapping()
-    public String createOrderByOne(HttpSession session, Map<String, Object> map,
+    public JSONObject createOrderByOne(HttpSession session, Map<String, Object> map,
                                    HttpServletResponse response,
                                    @RequestParam String addressId,
                                    @RequestParam String cityAddressId,
@@ -711,7 +714,7 @@ public class ForeOrderController {
         if (product == null) {
             object.put("success", false);
             object.put("url", "/");
-            return object.toJSONString();
+            return object;
         }
         // 将收货地址等相关信息存入Cookie中
 
@@ -775,13 +778,13 @@ public class ForeOrderController {
 
         object.put("success", true);
         object.put("url", "/order/pay/" + productOrder.getProductOrder_code());
-        return object.toJSONString();
+        return object;
     }
 
     //创建新订单-多订单项-ajax
     @ResponseBody
     @PostMapping("/list")
-    public String createOrderByList(HttpSession session, Map<String, Object> map,
+    public JSONObject createOrderByList(HttpSession session, Map<String, Object> map,
                                     HttpServletResponse response,
                                     @RequestParam String addressId,
                                     @RequestParam String cityAddressId,
@@ -806,13 +809,13 @@ public class ForeOrderController {
                     log.warn("订单项为空或用户状态不一致！");
                     object.put("success", false);
                     object.put("url", "/order/cart");
-                    return object.toJSONString();
+                    return object;
                 }
                 if (orderItem.getProductOrderItem_order() != null) {
                     log.warn("用户订单项不属于购物车，回到购物车页");
                     object.put("success", false);
                     object.put("url", "/order/cart");
-                    return object.toJSONString();
+                    return object;
                 }
                 boolean yn = productOrderItemService.update(new ProductOrderItem().setProductOrderItem_id(Integer.valueOf(id)).setProductOrderItem_userMessage(orderItemMap.getString(id)));
                 if (!yn) {
@@ -824,7 +827,7 @@ public class ForeOrderController {
         } else {
             object.put("success", false);
             object.put("url", "/order/cart");
-            return object.toJSONString();
+            return object;
         }
         log.info("将收货地址等相关信息存入Cookie中");
         Cookie cookie1 = new Cookie("addressId", addressId);
@@ -881,13 +884,13 @@ public class ForeOrderController {
 
         object.put("success", true);
         object.put("url", "/order/pay/" + productOrder.getProductOrder_code());
-        return object.toJSONString();
+        return object;
     }
 
     //创建订单项-购物车-ajax
     @ResponseBody
     @PostMapping("/orderItem/create/{product_id}")
-    public String createOrderItem(Map<String, Object> map,
+    public JSONObject createOrderItem(Map<String, Object> map,
                                   @PathVariable("product_id") Integer product_id,
                                   @RequestParam(required = false, defaultValue = "1") Short product_number,
                                   HttpSession session) {
@@ -901,7 +904,7 @@ public class ForeOrderController {
         if (product == null) {
             object.put("url", "/login");
             object.put("success", false);
-            return object.toJSONString();
+            return object;
         }
 
         ProductOrderItem productOrderItem = new ProductOrderItem();
@@ -921,7 +924,7 @@ public class ForeOrderController {
                 } else {
                     object.put("success", false);
                 }
-                return object.toJSONString();
+                return object;
             }
         }
         // 封装订单项对象
@@ -935,13 +938,13 @@ public class ForeOrderController {
         } else {
             object.put("success", false);
         }
-        return object.toJSONString();
+        return object;
     }
 
     //删除订单项-购物车-ajax
     @ResponseBody
     @DeleteMapping("/orderItem/{orderItem_id}")
-    public String deleteOrderItem(Map<String, Object> map, @PathVariable("orderItem_id") Integer orderItem_id,
+    public JSONObject deleteOrderItem(Map<String, Object> map, @PathVariable("orderItem_id") Integer orderItem_id,
                                   HttpSession session,
                                   HttpServletRequest request,
                                   HttpServletResponse response) {
@@ -971,7 +974,7 @@ public class ForeOrderController {
         } else {
             object.put("success", false);
         }
-        return object.toJSONString();
+        return object;
     }
 
     private JSONObject checkoutOrderNoStatus(ProductOrder order, Integer userId) {

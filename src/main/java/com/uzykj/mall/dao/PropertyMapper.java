@@ -20,4 +20,7 @@ public interface PropertyMapper {
     Property selectOne(@Param("property_id") Integer property_id);
 
     Integer selectTotal(@Param("property") Property property);
+
+    Property selectNameAndId(@Param("name") String name,@Param("category_id") Integer category_id);
+
 }

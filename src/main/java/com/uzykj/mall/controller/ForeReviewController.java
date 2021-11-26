@@ -88,7 +88,7 @@ public class ForeReviewController {
     //获取产品评论信息-ajax
     @ResponseBody
     @GetMapping()
-    public String getReviewInfo(@RequestParam("product_id") Integer product_id,
+    public JSONObject getReviewInfo(@RequestParam("product_id") Integer product_id,
                                 @RequestParam("index") Integer index/* 页数 */,
                                 @RequestParam("count") Integer count/* 行数*/) {
         List<Review> reviewList = reviewService.getListByProductId(product_id, new PageUtil(index, 10));
@@ -102,7 +102,7 @@ public class ForeReviewController {
         JSONObject object = new JSONObject();
         object.put("reviewList", reviewList);
         object.put("pageUtil", new PageUtil().setTotal(total).setIndex(index).setCount(count));
-        return object.toJSONString();
+        return object;
     }
 
     private JSONObject checkoutOrderNoStatus(ProductOrderItem orderItem, Integer orderItem_id) {

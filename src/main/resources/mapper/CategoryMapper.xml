@@ -8,10 +8,9 @@
         <result property="category_name" column="category_name"/>
         <result property="category_image_src" column="category_image_src"/>
     </resultMap>
-    <insert id="insertOne" parameterType="category">
-        INSERT category (category_id,category_name,category_image_src)
+    <insert id="insertOne" parameterType="category" useGeneratedKeys="true" keyProperty="category_id">
+        INSERT category (category_name,category_image_src)
         VALUES (
-        null,
         #{category.category_name},
         #{category.category_image_src})
     </insert>

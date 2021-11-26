@@ -26,6 +26,61 @@ public class Product {
     private Integer product_review_count;
     public Object setProduct_sale_co;
 
+    public String getPropertyUpdateJson() {
+        return propertyUpdateJson;
+    }
+
+    public void setPropertyUpdateJson(String propertyUpdateJson) {
+        this.propertyUpdateJson = propertyUpdateJson;
+    }
+
+    public Integer[] getPropertyDeleteList() {
+        return propertyDeleteList;
+    }
+
+    public void setPropertyDeleteList(Integer[] propertyDeleteList) {
+        this.propertyDeleteList = propertyDeleteList;
+    }
+
+    public String[] getProductSingleImageList() {
+        return productSingleImageList;
+    }
+
+    public void setProductSingleImageList(String[] productSingleImageList) {
+        this.productSingleImageList = productSingleImageList;
+    }
+
+    public String[] getProductDetailsImageList() {
+        return productDetailsImageList;
+    }
+
+    public void setProductDetailsImageList(String[] productDetailsImageList) {
+        this.productDetailsImageList = productDetailsImageList;
+    }
+
+    private String propertyAddJson;
+    private String propertyUpdateJson;
+    private Integer[] propertyDeleteList;
+    private String[] productSingleImageList;
+    private String[] productDetailsImageList;
+
+
+    public Object getSetProduct_sale_co() {
+        return setProduct_sale_co;
+    }
+
+    public void setSetProduct_sale_co(Object setProduct_sale_co) {
+        this.setProduct_sale_co = setProduct_sale_co;
+    }
+
+    public String getPropertyAddJson() {
+        return propertyAddJson;
+    }
+
+    public void setPropertyAddJson(String propertyAddJson) {
+        this.propertyAddJson = propertyAddJson;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -47,7 +102,7 @@ public class Product {
                 '}';
     }
 
-    public Product(){
+    public Product() {
 
     }
 
@@ -59,7 +114,7 @@ public class Product {
         this.product_isEnabled = product_isEnabled;
     }
 
-    public Product(Integer product_id, String product_name, String product_title, Double product_price, Double product_sale_price, Date product_create_date, Category product_category, Byte product_isEnabled, List<PropertyValue> propertyValueList, List<ProductImage> singleProductImageList, List<ProductImage> detailProductImageList, List<Review> reviewList, List<ProductOrderItem> productOrderItemList,Integer product_sale_count,Integer product_review_count) {
+    public Product(Integer product_id, String product_name, String product_title, Double product_price, Double product_sale_price, Date product_create_date, Category product_category, Byte product_isEnabled, List<PropertyValue> propertyValueList, List<ProductImage> singleProductImageList, List<ProductImage> detailProductImageList, List<Review> reviewList, List<ProductOrderItem> productOrderItemList, Integer product_sale_count, Integer product_review_count) {
         this.product_id = product_id;
         this.product_name = product_name;
         this.product_title = product_title;
@@ -123,8 +178,8 @@ public class Product {
     }
 
     public String getProduct_create_date() {
-        if(product_create_date != null){
-            SimpleDateFormat time=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.UK);
+        if (product_create_date != null) {
+            SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
             return time.format(product_create_date);
         }
         return null;

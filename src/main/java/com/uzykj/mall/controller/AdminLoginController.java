@@ -63,7 +63,7 @@ public class AdminLoginController {
     //获取管理员头像路径-ajax
     @ResponseBody
     @GetMapping("/profile_picture")
-    public String getAdminProfilePicture(@RequestParam String username) {
+    public JSONObject getAdminProfilePicture(@RequestParam String username) {
         log.info("根据用户名获取管理员头像路径");
         Admin admin = adminService.get(username, null);
 
@@ -74,6 +74,6 @@ public class AdminLoginController {
             object.put("success", true);
             object.put("srcString", admin.getAdmin_profile_picture_src());
         }
-        return object.toJSONString();
+        return object;
     }
 }
