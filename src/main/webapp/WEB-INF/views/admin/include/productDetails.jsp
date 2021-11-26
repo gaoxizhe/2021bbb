@@ -487,6 +487,7 @@
 <div class="details_div">
     <span class="details_title text_info">概述图片</span>
     <ul class="details_picList" id="product_single_list">
+        <p>${requestScope.product.singleProductImageList}</p>
         <c:forEach items="${requestScope.product.singleProductImageList}" var="image">
             <li><img
                     src="${image.productImage_src}"

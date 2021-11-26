@@ -80,8 +80,15 @@ public class AdminProductController {
 
         List<ProductImage> singleProductImageList = new ArrayList<>(5);
         List<ProductImage> detailsProductImageList = new ArrayList<>(8);
-        productImageList.stream().map(productImage -> productImage.getProductImage_type() == 0 ?
-                singleProductImageList.add(productImage) : detailsProductImageList.add(productImage));
+        productImageList.stream().forEach(productImage ->{
+            Byte productImage_type = productImage.getProductImage_type();
+            boolean b = productImage_type == 0;
+            if (b) {
+                singleProductImageList.add(productImage);
+            } else {
+                detailsProductImageList.add(productImage);
+            }
+        });
 
         product.setSingleProductImageList(singleProductImageList);
         product.setDetailProductImageList(detailsProductImageList);
@@ -122,14 +129,14 @@ public class AdminProductController {
     @ResponseBody
     @PostMapping("/product")
     public JSONObject addProduct(@RequestParam String product_name/* 产品名称 */,
-                             @RequestParam String product_title/* 产品标题 */,
-                             @RequestParam Integer product_category_id/* 产品类型ID */,
-                             @RequestParam Double product_sale_price/* 产品最低价 */,
-                             @RequestParam Double product_price/* 产品最高价 */,
-                             @RequestParam Byte product_isEnabled/* 产品状态 */,
-                             @RequestParam String propertyJson/* 产品属性JSON */,
-                             @RequestParam(required = false) String[] productSingleImageList/*产品预览图片名称数组*/,
-                             @RequestParam(required = false) String[] productDetailsImageList/*产品详情图片名称数组*/) {
+                                 @RequestParam String product_title/* 产品标题 */,
+                                 @RequestParam Integer product_category_id/* 产品类型ID */,
+                                 @RequestParam Double product_sale_price/* 产品最低价 */,
+                                 @RequestParam Double product_price/* 产品最高价 */,
+                                 @RequestParam Byte product_isEnabled/* 产品状态 */,
+                                 @RequestParam String propertyJson/* 产品属性JSON */,
+                                 @RequestParam(required = false) String[] productSingleImageList/*产品预览图片名称数组*/,
+                                 @RequestParam(required = false) String[] productDetailsImageList/*产品详情图片名称数组*/) {
         JSONObject jsonObject = new JSONObject();
         Product product = new Product()
                 .setProduct_name(product_name)
@@ -222,18 +229,18 @@ public class AdminProductController {
     //更新产品信息-ajax
     @ResponseBody
     @PutMapping("/product/{product_id}")
-    public JSONObject updateProduct(@RequestParam(name = "product_name" ,required = false) String product_name/* 产品名称 */,
-                                @RequestParam String product_title/* 产品标题 */,
-                                @RequestParam Integer product_category_id/* 产品类型ID */,
-                                @RequestParam Double product_sale_price/* 产品最低价 */,
-                                @RequestParam Double product_price/* 产品最高价 */,
-                                @RequestParam Byte product_isEnabled/* 产品状态 */,
-                                @RequestParam String propertyAddJson/* 产品添加属性JSON */,
-                                @RequestParam String propertyUpdateJson/* 产品更新属性JSON */,
-                                @RequestParam(required = false) Integer[] propertyDeleteList/* 产品删除属性ID数组 */,
-                                @RequestParam(required = false) String[] productSingleImageList/*产品预览图片名称数组*/,
-                                @RequestParam(required = false) String[] productDetailsImageList/*产品详情图片名称数组*/,
-                                @PathVariable("product_id") Integer product_id/* 产品ID */)
+    public JSONObject updateProduct(@RequestParam(name = "product_name", required = false) String product_name/* 产品名称 */,
+                                    @RequestParam String product_title/* 产品标题 */,
+                                    @RequestParam Integer product_category_id/* 产品类型ID */,
+                                    @RequestParam Double product_sale_price/* 产品最低价 */,
+                                    @RequestParam Double product_price/* 产品最高价 */,
+                                    @RequestParam Byte product_isEnabled/* 产品状态 */,
+                                    @RequestParam String propertyAddJson/* 产品添加属性JSON */,
+                                    @RequestParam String propertyUpdateJson/* 产品更新属性JSON */,
+                                    @RequestParam(required = false) Integer[] propertyDeleteList/* 产品删除属性ID数组 */,
+                                    @RequestParam(required = false) String[] productSingleImageList/*产品预览图片名称数组*/,
+                                    @RequestParam(required = false) String[] productDetailsImageList/*产品详情图片名称数组*/,
+                                    @PathVariable("product_id") Integer product_id/* 产品ID */)
 //    public JSONObject updateProduct(@RequestBody Product productP, @PathVariable("product_id") Integer product_id)
     {
 //        String propertyAddJson = productP.getPropertyAddJson();
@@ -372,7 +379,7 @@ public class AdminProductController {
     @ResponseBody
     @PostMapping("/product/delete/{arr}")
     public JSONObject deleteProduct(HttpSession session,
-                                @PathVariable("arr") Integer[] product_id_list/* 商品id集合 */) {
+                                    @PathVariable("arr") Integer[] product_id_list/* 商品id集合 */) {
         JSONObject object = new JSONObject();
         log.info("删除:用户id数组：" + product_id_list.toString());
         for (int i = 0; i < product_id_list.length; i++) {
@@ -448,14 +455,14 @@ public class AdminProductController {
     @ResponseBody
     @GetMapping("/product/{index}/{count}")
     public JSONObject getProductBySearch(@RequestParam(required = false) String product_name/* 产品名称 */,
-                                     @RequestParam(required = false) Integer category_id/* 产品类型ID */,
-                                     @RequestParam(required = false) Double product_sale_price/* 产品最低价 */,
-                                     @RequestParam(required = false) Double product_price/* 产品最高价 */,
-                                     @RequestParam(required = false) Byte[] product_isEnabled_array/* 产品状态数组 */,
-                                     @RequestParam(required = false) String orderBy/* 排序字段 */,
-                                     @RequestParam(required = false, defaultValue = "true") Boolean isDesc/* 是否倒序 */,
-                                     @PathVariable Integer index/* 页数 */,
-                                     @PathVariable Integer count/* 行数 */) throws UnsupportedEncodingException {
+                                         @RequestParam(required = false) Integer category_id/* 产品类型ID */,
+                                         @RequestParam(required = false) Double product_sale_price/* 产品最低价 */,
+                                         @RequestParam(required = false) Double product_price/* 产品最高价 */,
+                                         @RequestParam(required = false) Byte[] product_isEnabled_array/* 产品状态数组 */,
+                                         @RequestParam(required = false) String orderBy/* 排序字段 */,
+                                         @RequestParam(required = false, defaultValue = "true") Boolean isDesc/* 是否倒序 */,
+                                         @PathVariable Integer index/* 页数 */,
+                                         @PathVariable Integer count/* 行数 */) throws UnsupportedEncodingException {
         //移除不必要条件
         if (product_isEnabled_array != null && (product_isEnabled_array.length <= 0 || product_isEnabled_array.length >= 3)) {
             product_isEnabled_array = null;
@@ -516,7 +523,7 @@ public class AdminProductController {
     @ResponseBody
     @DeleteMapping("/productImage/{productImage_id}")
     public JSONObject deleteProductImageById(HttpSession session,
-                                         @PathVariable Integer productImage_id/* 产品图片ID */) {
+                                             @PathVariable Integer productImage_id/* 产品图片ID */) {
         JSONObject object = new JSONObject();
         log.info("获取productImage_id为{}的产品图片信息", productImage_id);
         @SuppressWarnings("unused")
@@ -553,7 +560,7 @@ public class AdminProductController {
     @ResponseBody
     @PostMapping("/uploadProductImage")
     public JSONObject uploadProductImage(@RequestParam MultipartFile file,
-                                     @RequestParam String imageType, HttpSession session) {
+                                         @RequestParam String imageType, HttpSession session) {
         JSONObject object = new JSONObject();
         object.put("success", false);
 

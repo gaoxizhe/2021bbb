@@ -61,7 +61,8 @@ public class ForeHomeController {
         map.put("categoryList", categoryList);
         map.put("specialProductList", specialProductList);
 
-        return "fore/homePage";
+        // TODO index
+        return "fore/indexDev";
     }
 
     //转到前台-错误页

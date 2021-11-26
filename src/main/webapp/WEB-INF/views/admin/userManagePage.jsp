@@ -144,6 +144,8 @@
         function deleteUser() {
             var arr = new Array();
             $("#tbodyId input[type='checkbox']:checked").each(function(index,item){
+                console.log(index)
+                console.log(item)
                 arr.push($(this).val());
             });
             console.log(arr);
